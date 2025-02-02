@@ -7,6 +7,16 @@ namespace CustomLinq
         public string Name { get; set; }
         public int Age { get; set; }
     }
+    public static class MyLinq
+    {
+        public static IEnumerable<T> CheckStudentAgeLessThan20<T>(this IEnumerable<T> source, Predicate<T> predicate) where T : class
+        {
+            foreach (var item in source)
+            {
+                if (predicate(item)) yield return item;
+            }
+        }
+    }
     internal class Program
     {
 
