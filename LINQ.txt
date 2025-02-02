@@ -1,0 +1,37 @@
+LINQ
+- Để sử dung LINQ, phải dung namespace System.Linq
+- LINQ là 1 danh sách các extension method, them 1 số method cho interface IEnumerable. Vì các class List, DbSet, ... đều implement interface này, do đó chúng đều có thể gọi Linq method
+- Signature của 3 Linq method cơ bản: Where, Select và First
+public static class Enumerable
+ {
+   public static IEnumerable<TSource> Where<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate);
+   public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector);
+   public static TSource First<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate);
+}
+
+So sánh LINQ vs không dung LINQ:
+	public class Student
+	 {
+	    public string Name { get; set; }
+	    public int Age { get; set; }
+	 }
+	var students = new List<Student>();
+	var result = students.Where(stu => stu.Age < 20);
+	//----------------------------------------------------------------------------
+	//Gán method vào delegate
+	public bool FindStudent(Student stu) { return stu.Age < 20; }
+	 
+	//Sử dụng lambda expression sẽ ngắn hơn
+	//Xem lại bài viết về lamda expression
+	Func<Student, bool> func1 = FindStudent;
+	func1 = stu => stu.Age < 20;
+	 
+	List<Student> students = new List<Student>();
+	IEnumerable<Student> result = students.Where<Student>(func1);
+	 
+	//Với generic trong C#, ta không cần nói rõ kiểu dữ liệu.
+	//Dựa vào kiểu dữ liệu của Func<Student, bool> truyền vào
+	//C# tự hiểu ta dùng hàm Where với kiểu dữ liệu Student
+	 
+	//Ta bỏ kiểu Student, thay func bằng lambda
+	var result = students.Where(stu => stu.Age < 20);

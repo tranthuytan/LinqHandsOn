@@ -1,0 +1,72 @@
+Lambda expression:
+
+Anonymous function:
+- Trong javascript, ta có thể có anonymous function bang cách:
+
+	//Dùng anonymous function, tangQuaDlg giờ đã là 1 delegate
+	var tangQuaDlg = function(qua) {alert("qua");};
+	function oNha(vo, tangQua){
+		var qua = "Quà đã nhận";
+		tangQua(qua)
+	}
+	//Sử dung hàm
+	oNha(vo, tangQuaDlg);
+
+- Khi áp dung trong C# (từ .NET 2.0):
+	public delegate void TangQuaDelegate(string qua);
+	TangQuaDelegate dlg = delegate(string qua) { Console.WriteLine("Tang qua "+qua);};
+- Cách viết này khá rườm rà, và Microsoft đã bổ sung lambda expression ở .NET 3.0
+
+Lambda expression:
+- Lambda express là 1 cách viết anonymous function ngắn gọn hơn
+	//Cách cũ
+	TangQuaDelegate dlg = delegate(string qua) { Console.WriteLine("Tặng quà" + qua); };
+	 
+	//Dùng lambda expression
+	TangQuaDelegate lamdaDlg = (qua) => { Console.WriteLine("Tặng quà: " + qua); }
+	 
+	//Câu lệnh đầy đủ của lambda expression.
+	//Dấu "=>" gọi là go-to
+	(parameters) => { statement }
+
+- Các quy tắc viết lambda expression
+	//1. Có thể bỏ qua kiểu dữ liệu của parameter truyền vào
+	(string qua) => {Console.WriteLine("Tặng quà: " + qua);}
+	(qua) => {Console.WriteLine("Tặng quà: " + qua);}
+	 
+	//2. Nếu không có parameter, bỏ dấu () trống
+	() => {Console.WriteLine("Hello");}
+	 
+	//3. Nếu chỉ có 1 parameter, có thể bỏ luôn dấu ()
+	(x) => {Console.WriteLine("Hello " + x);}
+	x => {Console.WriteLine("Hello " + x);}
+	 
+	//4. Nếu có nhiều parameter, ngăn cách bằng dấu phẩy
+	(x, y) => {Console.WriteLine("Hello " + x + y);}
+	 
+	//5. Nếu anonymous function chỉ có 1 câu lệnh, có thể bỏ dấu {}
+	x => { Console.WriteLine("Hello " + x); }
+	x => Console.WriteLine("Hello " + x)
+	 
+	//6. Nếu chỉ return 1 giá trị, có thể bỏ chữ return.
+	//4 lambda expression sau tương đương nhau
+	(x) => { return x > 4; }
+	x => { return x > 4; }
+	x => return x > 4
+	x => x > 4
+
+Lambda expression và LINQ
+- Với LINQ, hàm Where(this IEnumerable<TSource> source, Func<TSource,bool> predicate) sử dung Func (truyền vào TSource, trả về bool)
+- Nhờ lamda expression, ta có thể dung được LINQ như sau:
+
+	var studentList = new List<Student>();
+ 
+	//Thứ đẹp đẽ ngắn gọn này là lambda expression
+	var students = studentList.Where(stu => stu.Age > 20);
+ 
+	//Nếu không có nó, ta phải viết cái thứ vừa dài dòng vừa gớm ghiếc như sau
+	var student = studentList.Where(new delegate(Student stu) { return stu.Age > 20; });
+ 
+	//Hoặc tệ hơn
+	public bool FindStudentWithAge(Student stu) { return stu.Age > 20; }
+	var student = studentList.Where(FindStudentWithAge);

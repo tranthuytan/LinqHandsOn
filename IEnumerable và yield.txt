@@ -1,0 +1,41 @@
+IEnumerable và yield
+- Các kiểu Collection trong C# như List, ArrayList, Dictionary, ... đều implement interface IEnumerable, do đó, ta có thể sử dung foreach để duyệt các kiểu dữ lieu này
+- Yield là 1 keyword thường hay được dung với IEnumerable. Sử dung yield sẽ làm code ngắn gọn, hiệu suất cao hơn.
+
+IEnumerable
+- 1 mảng IEnumerable có những thuộc tính sau:
+	- Là 1 mảng read-only, chỉ có thể đọc, không thể them hay bớt phần tử
+	- Là mảng 1 chiều, từ đầu đến cuối mảng
+
+Yield và yield return:
+- Với 2 method như sau:
+	public List<Student> ReadStudentsFromFile(string fileName)
+	{
+	  string[] lines = File.ReadAllLines(fileName);
+	  List<Student> result = new List<Student>(); //Tạo một list trống
+	 
+	  foreach (var line in lines)
+	  {
+	    Student student = ParseTextToStudent(line);
+	    result.Add(student); //Thêm student vào list
+	  }
+	  return result; // Trả list ra
+	}
+	//-----------------------------------------------------------------------
+	public IEnumerable<Student> YieldReadStudentsFromFile(string fileName)
+	{
+	 string[] lines = File.ReadAllLines(fileName);
+	 foreach (var line in lines)
+	 {
+	   Student student = ParseTextToStudent(line);
+	   yield return student;
+	 }
+	}
+- Ở method đầu, ta trả về kết quả sau khi đã chạy hết hàm for, đưa kết quả vào trong 1 list mới, hàm kết thúc
+- Ở method thứ 2, kết quả được trả về ngay sau khi parse được student đầu tiên, với mỗi vòng lặp tiếp theo, chương trình sẽ chạy tiếp vào YieldReadStudentsFromFile, lấy kết quả ra dần dần
+
+Ứng dung:
+- Khi cần method trả về 1 danh sách read-only, chỉ đọc, không được thêm bớt xóa sửa
+- Như trường hợp đầu tiên, giả sử ta có 50 dòng, hàm "ParseTextToStudent" tốn 1s 1 dòng, ta phải đợi 50s. VỚi hàm YieldReadStudentsFromFile, hàm ParseTextToStudent chỉ được chạy mỗi khi ta đọc thôn tin của học sinh đó => tang performance lên rất nhiều (nếu ta chỉ lấy 5 học sinh đầu, chỉ cần đợi 5s)
+- Trong 1 số trường hợp, danh sách trả về có vô hạn phần tử, hoặc lấy toàn bộ phần tử rất mất thời gian, ta phải sử dung yield để giải quyết
+	

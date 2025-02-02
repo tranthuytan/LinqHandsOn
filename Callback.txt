@@ -1,0 +1,18 @@
+Callback:
+
+Định nghĩa:
+- Truyền 1 hàm vào 1 hàm khác như 1 tham số
+- Ví dụ jQuery:
+
+function hellojQuery() {
+  alert("Hello from jQuery");
+}
+$('#btn2').click(hellojQuery);
+
+sẽ tương tự với
+
+$('#btn2').click(function() { alert("Hello from jQuery") });
+
+Ứng dung:
+- Gọi 1 hàm khi có 1 số sự kiện xảy ra. Ví dụ như khi click vào 1 nút, ta gọi hàm A, khi tắt cửa sổ, ta gọi hàm B, ...
+- LINQ được xây dựng due trên khái niệm callback và lambda expression. Với LINQ, ta có thể thực hiện các thao tác như: Tìm 1 phần tử trong mảng, lọc phần tử trong mảng, sắp xếp mảng, ... trở nên vô cùng đơn giản và thuận tiện.

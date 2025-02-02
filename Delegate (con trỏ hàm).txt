@@ -1,0 +1,50 @@
+Delegate (con trỏ hàm)
+
+Định nghĩa:
+- Delegate cho phép ta truyền function (hàm) vào 1 function khác với vai trò là param
+
+Ứng dung:
+- Khai báo delegate với cú pháp:
+
+//delegate + kiểu trả về (void) + tên delegate + (tham số truyền vào)
+public delegate void TangQuaDelegate(string qua);
+
+public void tangQua(string qua) {
+	Console.WriteLine("Da tang "+qua);
+}
+public void oNha(Person vo, TangQuaDelegate tangQua) {
+	var qua = "Qua da nhan";
+	tangQua(qua);
+}
+
+- Trong C#, delegate thường được sử dung phối hợp với event (vd hàm trong WinForm):
+
+ this.button1.Click += new System.EventHandler(this.button1_Click); 
+//Thật sự thì event handler chỉ là 1 delegate
+ public delegate void EventHandler(object sender, EventArgs e);
+//Function chúng ta truyền vào chính là function với 2 param sender, a, kiểu trả về la void
+ private void button1_Click(object sender, EventArgs e) { }
+
+
+APF (Action, Predicate, Func)
+Khái niệm và cách dùng:
+- Action: Action<T in1, Tin2, ...>: Action tương đương 1 delegate với kiểu trả về là void, với in1, in2 là các params nhận vào
+- Predicate: Predicate<T in>: Predicate tương đương 1 delegate với kiểu trả về là bool, với in là các param nhận vào. Predicate chỉ có thể nhận vào 1 param duy nhất
+- Func: Func<T in1, T in2, ..., T result>. Func tương đương với 1 delegate với kiểu trả về do ta khai báo (result), in1, in2 là các params nhận vào. Func bắt buộc phải trả ra giá trị, không thể trả void.
+
+Delegate sang APF
+
+delegate void VoidDelegate(int input1, bool input2) = Action<int,bool>
+delegate bool BoolDelegate(int input1) = Predicate<int> / Func<int, bool>
+delegate int intDelegate(bool input2) = Func<bool, int>
+delegate void HelloWorldDelegate() = Action
+delegate bool HelloWorldBoolDelegate() = Predicate / Func<bool>
+
+- Với APF, đoạn code phải sử dung delegate lúc đầu có thể được viết lại như sau:
+public void tangQua(string qua) {
+	Console.WriteLine("Da tang "+qua);
+}
+public void oNha(Person vo, Action tangQua) {
+	var qua = "Qua da nhan";
+	tangQua(qua);
+}
